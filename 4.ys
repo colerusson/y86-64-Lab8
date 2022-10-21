@@ -1,0 +1,28 @@
+irmovq $8, %r8
+irmovq $1, %r10
+subq %r10, %rax #decrement number of values
+
+loop1:
+irmovq data, %rsi
+irmovq $0, %rdi #loop counter
+irmovq $0, %rbx #swap indicator
+
+loop2:
+mrmovq (%rsi), %rdx 
+mrmovq 8(%rsi), %rcx
+rrmovq %rcx, %r9
+subq %rdx, %r9
+jg doneswap #call doneswap if no need to swap
+rmmovq %rdx, 8(%rsi) #swap the values
+rmmovq %rcx, (%rsi)
+irmovq $1, %rbx
+
+doneswap:
+addq %r10, %rdi #incremenet loop counter
+addq %r8, %rsi #move pointer up 8 bits
+rrmovq %rax, %r11 
+subq %rdi, %r11
+jne loop2 #loop back to 2 if not the end of list
+andq %rbx, %rbx
+jne loop1 #loop back to one if we swapped 
+halt
